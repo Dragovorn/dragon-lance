@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 class DragonLance {
 
     private Map<String, AtomicInteger> peopleBashed;
+    private Map<String, AtomicInteger> peopleBashedEarly;
 
     private int heroBashes;
     private int creepBashes;
@@ -22,6 +23,7 @@ class DragonLance {
         this.heroBashes = 0;
         this.creepBashes = 0;
         this.peopleBashed = new HashMap<>();
+        this.peopleBashedEarly = new HashMap<>();
 
         new SimpleRunner(new MappedFileSource(args[0])).runWith(this);
 
@@ -32,7 +34,12 @@ class DragonLance {
         System.out.println("Slardar Bashed Creeps " + this.creepBashes + " times.");
         System.out.println("Slardar Bashed a total of " + (this.heroBashes + this.creepBashes) + " times.");
         System.out.println("---");
-        System.out.println("Heros bashed and number of times bashed:");
+        System.out.println("Heros bashed and nubmer if times bashed (Early Game (< 15 mins)):");
+        for (Map.Entry<String, AtomicInteger> entry : this.peopleBashedEarly.entrySet()) {
+            System.out.println(entry.getKey() + " was bashed " + entry.getValue().get() + " times.");
+        }
+        System.out.println("---");
+        System.out.println("Heroes bashed and number of times bashed (Entire Game):");
         for (Map.Entry<String, AtomicInteger> entry : this.peopleBashed.entrySet()) {
             System.out.println(entry.getKey() + " was bashed " + entry.getValue().get() + " times.");
         }
@@ -87,6 +94,12 @@ class DragonLance {
                 this.peopleBashed.put(otherName, num);
 
                 this.heroBashes++;
+
+                if ((int) entry.getTimestamp() / 60 <= 15) {
+                    AtomicInteger early = this.peopleBashedEarly.getOrDefault(otherName, new AtomicInteger(0));
+                    early.incrementAndGet();
+                    this.peopleBashedEarly.put(otherName, early);
+                }
             } else {
                 this.creepBashes++;
             }
