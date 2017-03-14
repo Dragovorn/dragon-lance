@@ -34,7 +34,7 @@ class DragonLance {
         System.out.println("Slardar Bashed Creeps " + this.creepBashes + " times.");
         System.out.println("Slardar Bashed a total of " + (this.heroBashes + this.creepBashes) + " times.");
         System.out.println("---");
-        System.out.println("Heros bashed and nubmer if times bashed (Early Game (< 15 mins)):");
+        System.out.println("Heroes bashed and number if times bashed (Early Game (< 15 mins)):");
         for (Map.Entry<String, AtomicInteger> entry : this.peopleBashedEarly.entrySet()) {
             System.out.println(entry.getKey() + " was bashed " + entry.getValue().get() + " times.");
         }
